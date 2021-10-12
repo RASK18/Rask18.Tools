@@ -1,0 +1,36 @@
+﻿@page "/text"
+
+<h1>Text Comparer</h1>
+
+<div class="container">
+    <div class="row">
+        <input @bind="result" />
+    </div>
+    <div class="row">
+        <textarea @bind="text1" class="col"></textarea>
+        <textarea @bind="text2" class="col"></textarea>
+    </div>
+    <div class="row">
+        <button class="col btn btn-primary" @onclick="Compare">Compare</button>
+    </div>
+</div>
+
+@code {
+    private string text1 = "Test1";
+    private string text2 = "Test1";
+    private string result = "";
+
+    private void Compare()
+    {
+        bool isEquals = text1.Equals(text2, StringComparison.InvariantCultureIgnoreCase);
+
+        if (isEquals)
+        {
+            result = "Equals!";
+        }
+        else
+        {
+            result = "Diferents!";
+        }
+    }
+}

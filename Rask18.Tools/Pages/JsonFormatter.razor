@@ -1,0 +1,51 @@
+﻿@page "/json"
+@using Data;
+@using Newtonsoft.Json.Linq;
+@inject LineService _lineService
+
+<h1>Json Formatter</h1>
+
+<div class="container">
+    <div class="row">
+        <textarea class="col-6" @oninput="TextAreaChange" value="@json"></textarea>
+        <div class="col-1 border text-center" style="background-color: lightgray; user-select: none;">
+            @foreach (Line line in lines)
+            {
+                <span>@line.Number</span>
+                @if (line.CanContract)
+                {
+                    <span>a</span>
+                }
+                <br />
+            }
+        </div>
+        <div class="col-5 border">
+            @foreach (Line line in lines)
+            {
+                <span style="white-space: pre">@(new string(' ', line.Level * 2))</span>
+                <span style="color: black">"@line.Key":</span>
+                <span style="color: green">"@line.Value"</span>
+                <br />
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<Line> lines = new List<Line>();
+    public string json = "{\"Bb\":\"Bb\",\"Cc\":{\"Ee\":\"Ee\",\"Dd\":\"Dd\"},\"Aa\":\"Aa\",\"Ff\":[\"Hh\",\"Gg\"],\"Ii\":[{\"Kk\":\"Kk\",\"Jj\":\"Jj\"}]}";
+
+    protected void TextAreaChange(ChangeEventArgs e)
+    {
+        json = e.Value.ToString();
+
+        try
+        {
+            JObject obj = JObject.Parse(json);
+            lines = _lineService.GetLines(obj.Sort());
+        }
+        catch (Exception)
+        {
+        }
+    }
+}
